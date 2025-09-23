@@ -3,3 +3,4 @@ Started with: https://www.sanity.io/learn/course/sanity-and-shopify-with-hydroge
 Next up:
 * visual editing instance, finish the course.
 * main nav from sanity, not shopify or static
+* other hydrogen scaffolding like account/cart/etc.
