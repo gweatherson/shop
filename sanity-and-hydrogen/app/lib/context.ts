@@ -26,17 +26,19 @@ export async function createAppLoadContext(
     AppSession.init(request, [env.SESSION_SECRET]),
   ]);
 
-  // 1. Configure the Sanity Loader and preview mode
+  // 1. Configure the Sanity Client and context
+  const sanityClient = createClient({
+    projectId: env.SANITY_PROJECT_ID,
+    dataset: env.SANITY_DATASET,
+    apiVersion: env.SANITY_API_VERSION || '2025-06-09',
+    useCdn: true,
+  });
+
   const sanity = createSanityContext({
     request,
     cache,
     waitUntil,
-    client: createClient({
-      projectId: env.SANITY_PROJECT_ID,
-      dataset: env.SANITY_DATASET,
-      apiVersion: env.SANITY_API_VERSION || '2025-06-09',
-      useCdn: true,
-    }),
+    client: sanityClient,
     preview: env.SANITY_API_TOKEN ? {
       token: env.SANITY_API_TOKEN,
       studioUrl: 'http://localhost:3333',
@@ -59,6 +61,7 @@ export async function createAppLoadContext(
   return {
     ...hydrogenContext,
     sanity,
+    sanityClient,
     // declare additional Remix loader context
   };
 }

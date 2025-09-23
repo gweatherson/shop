@@ -36,9 +36,43 @@ export const settingsType = defineType({
   ],
   fields: [
     defineField({
-      name: 'menu',
-      type: 'menu',
+      name: 'navigationMenu',
+      title: 'Navigation Menu',
+      type: 'array',
       group: 'navigation',
+      of: [
+        {
+          type: 'object',
+          title: 'Navigation Link',
+          fields: [
+            defineField({
+              name: 'link',
+              title: 'Link',
+              type: 'link',
+            }),
+            {
+              name: 'label',
+              type: 'string',
+              title: 'Link Label',
+              validation: (Rule) => Rule.required()
+            },
+          ],
+          preview: {
+            select: {
+              title: 'label',
+              linkType: 'link.linkType',
+              internal: 'link.internal.title',
+              external: 'link.external'
+            },
+            prepare({title, linkType, internal, external}) {
+              return {
+                title: title || 'Navigation Link',
+                subtitle: linkType === 'internal' ? `→ ${internal}` : external
+              }
+            }
+          }
+        }
+      ]
     }),
     defineField({
       name: 'footer',

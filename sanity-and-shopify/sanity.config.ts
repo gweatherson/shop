@@ -11,6 +11,8 @@ import {media, mediaAssetSource} from 'sanity-plugin-media'
 import {customDocumentActions} from './plugins/customDocumentActions'
 import Navbar from './components/studio/Navbar'
 
+import {linkField} from 'sanity-plugin-link-field'
+
 import { presentationTool } from "sanity/presentation";
 
 const devOnlyPlugins = [visionTool()]
@@ -23,6 +25,9 @@ export default defineConfig({
   dataset: 'production',
 
   plugins: [
+    linkField({
+      linkableSchemaTypes: ['page', 'product'],
+    }),
     presentationTool({
       previewUrl: {
         origin: "http://localhost:3000",
