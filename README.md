@@ -1,7 +1,6 @@
 Started with: https://www.sanity.io/learn/course/sanity-and-shopify-with-hydrogen/
 
 Next up:
-* now that the menu data is clean, use a menu (hopefully) util from https://github.com/sanity-io/hydrogen-sanity to fetch items!
-
-
+* fix footer menu fields to match the header menu fiels
+* use what was added to the header menu for the footer menu
 * other hydrogen scaffolding like account/cart/etc.
