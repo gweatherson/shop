@@ -13,6 +13,7 @@ interface HeaderProps {
   cart: Promise<CartApiQueryFragment | null>;
   isLoggedIn: Promise<boolean>;
   publicStoreDomain: string;
+  sanityNavigation?: any[] | null;
 }
 
 type Viewport = 'desktop' | 'mobile';
@@ -22,21 +23,82 @@ export function Header({
   isLoggedIn,
   cart,
   publicStoreDomain,
+  sanityNavigation,
 }: HeaderProps) {
   const {shop, menu} = header;
+
+  // Debug logging
+  // console.error('Header Debug - sanityNavigation:', sanityNavigation);
+  // console.error('Header Debug - sanityNavigation length:', sanityNavigation?.length);
+
   return (
     <header className="header">
       <NavLink prefetch="intent" to="/" style={activeLinkStyle} end>
         <strong>{shop.name}</strong>
       </NavLink>
-      <HeaderMenu
-        menu={menu}
-        viewport="desktop"
-        primaryDomainUrl={header.shop.primaryDomain.url}
-        publicStoreDomain={publicStoreDomain}
-      />
+
+      {/* Use Sanity navigation if available, otherwise fall back to Shopify menu */}
+      {sanityNavigation && sanityNavigation.length > 0 ? (
+        <SanityHeaderMenu
+          navigation={sanityNavigation}
+          viewport="desktop"
+        />
+      ) : (
+        <HeaderMenu
+          menu={menu}
+          viewport="desktop"
+          primaryDomainUrl={header.shop.primaryDomain.url}
+          publicStoreDomain={publicStoreDomain}
+        />
+      )}
       <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
     </header>
+  );
+}
+
+function SanityHeaderMenu({
+  navigation,
+  viewport,
+}: {
+  navigation: any[];
+  viewport: Viewport;
+}) {
+  const className = `header-menu-${viewport}`;
+  const {close} = useAside();
+
+  return (
+    <nav className={className} role="navigation">
+      {viewport === 'mobile' && (
+        <NavLink
+          end
+          onClick={close}
+          prefetch="intent"
+          style={activeLinkStyle}
+          to="/"
+        >
+          Home
+        </NavLink>
+      )}
+      {navigation.map((item) => {
+        if (!item.url || !item.label) return null;
+
+        return (
+          <NavLink
+            key={item._key}
+            className="header-menu-item"
+            end
+            onClick={close}
+            prefetch="intent"
+            style={activeLinkStyle}
+            to={item.url}
+            target={item.newWindow ? '_blank' : undefined}
+            rel={item.newWindow ? 'noreferrer' : undefined}
+          >
+            {item.label}
+          </NavLink>
+        );
+      })}
+    </nav>
   );
 }
 

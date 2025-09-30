@@ -34,7 +34,7 @@ export async function createAppLoadContext(
     useCdn: true,
   });
 
-  const sanity = createSanityContext({
+  const sanity = await createSanityContext({
     request,
     cache,
     waitUntil,

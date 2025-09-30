@@ -10,7 +10,6 @@ import {customProductOptionColorObjectType} from './objects/customProductOption/
 import {customProductOptionColorType} from './objects/customProductOption/customProductOptionColorType'
 import {customProductOptionSizeObjectType} from './objects/customProductOption/customProductOptionSizeObjectType'
 import {customProductOptionSizeType} from './objects/customProductOption/customProductOptionSizeType'
-import {footerType} from './objects/global/footerType'
 import {gridItemType} from './objects/module/gridItemType'
 import {gridType} from './objects/module/gridType'
 import {heroType} from './objects/module/heroType'
@@ -57,7 +56,6 @@ const objects = [
   customProductOptionColorType,
   customProductOptionSizeObjectType,
   customProductOptionSizeType,
-  footerType,
   gridItemType,
   gridType,
   heroType,

@@ -100,19 +100,35 @@ export async function loader(args: LoaderFunctionArgs) {
  * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
  */
 async function loadCriticalData({context}: LoaderFunctionArgs) {
-  const {storefront} = context;
+  const {storefront, sanity} = context;
 
-  const [header] = await Promise.all([
+  const [header, sanityNavigation] = await Promise.all([
     storefront.query(HEADER_QUERY, {
       cache: storefront.CacheLong(),
       variables: {
         headerMenuHandle: 'main-menu', // Adjust to your header menu handle
       },
     }),
-    // Add other queries here, so that they are loaded in parallel
+    // Fetch Sanity navigation data
+    sanity.query(`*[_type == "settings"][0].navigationMenu[]{
+      _key,
+      label,
+      "linkType": link.type,
+      "newWindow": link.blank,
+      "url": select(
+        link.type == "internal" => "/products/" + link.internalLink->store.slug.current,
+        link.type == "external" => link.url
+      )
+    }`).catch((error) => {
+      console.error('Sanity navigation query failed:', error);
+      return null;
+    }),
   ]);
 
-  return {header};
+  console.error('Sanity Navigation Data:', sanityNavigation);
+  console.error('Sanity Navigation Data (detailed):', JSON.stringify(sanityNavigation, null, 2));
+
+  return {header, sanityNavigation};
 }
 
 /**
